@@ -110,33 +110,33 @@ output$QCPlotVln <- renderPlot({
     return(NULL)
   } 
   dd <- DataQC()
-  p1 <- VlnPlot(object = dd, features.plot = c("nGene", "nUMI", "percent.mito"), nCol = 3)
+  p1 <- VlnPlot(object = dd, features.plot = c("nFeature_RNA", "nCount_RNA", "percent.mito"), nCol = 3)
   
-  df  <- data.frame(nGene = ' ',Count = dd@meta.data$nGene)
-  p1 <- ggplot(df, aes(x=nGene,y=Count)) + geom_violin() + 
+  df  <- data.frame(nFeature_RNA = ' ',Count = dd@meta.data$nFeature_RNA)
+  p1 <- ggplot(df, aes(x=nFeature_RNA,y=Count)) + geom_violin() + 
     geom_hline(yintercept = c(input$parm_filter_gene_min,input$parm_filter_gene_max),colour = "blue",size = 1) +
     geom_jitter(shape=16, position=position_jitter(0.2))+ 
     theme_classic() + labs(x='',y='Number of genes per cell')
   
-  df <- data.frame(nGene = ' ',Count = dd@meta.data$nUMI)
-  p2 <- ggplot(df, aes(x=nGene,y=Count)) + geom_violin() +
+  df <- data.frame(nFeature_RNA = ' ',Count = dd@meta.data$nCount_RNA)
+  p2 <- ggplot(df, aes(x=nFeature_RNA,y=Count)) + geom_violin() +
     geom_jitter(shape=16, position=position_jitter(0.2))+ 
     theme_classic() + labs(x='',y='Number of UMIs per cell')
   
-  df  <- data.frame(nGene = ' ',Count = dd@meta.data$percent.mito * 100)
-  p3 <- ggplot(df, aes(x=nGene,y=Count)) + geom_violin() + 
+  df  <- data.frame(nFeature_RNA = ' ',Count = dd@meta.data$percent.mito * 100)
+  p3 <- ggplot(df, aes(x=nFeature_RNA,y=Count)) + geom_violin() + 
     geom_hline(yintercept = c(input$parm_filter_mt),colour = "blue",size = 1) +
     geom_jitter(shape=16, position=position_jitter(0.2))+ 
     theme_classic() + ylim(0,100) + labs(x='',y='Percent of Mitochondrial genes in cell')
   
   
-  gene.cor <- round(x = cor(x = dd@meta.data$nUMI, y = dd@meta.data$percent.mito),digits = 2)
-  p4 <- ggplot(data=dd@meta.data, aes(x=nUMI, y=percent.mito))+geom_point() + 
+  gene.cor <- round(x = cor(x = dd@meta.data$nCount_RNA, y = dd@meta.data$percent.mito),digits = 2)
+  p4 <- ggplot(data=dd@meta.data, aes(x=nCount_RNA, y=percent.mito))+geom_point() + 
     geom_hline(yintercept = c(input$parm_filter_mt),colour = "blue",size = 1) +
     labs(title=paste0('   R = ',gene.cor))+ ylim(0,100) +theme_classic()
   
-  gene.cor <- round(x = cor(x = dd@meta.data$nUMI, y = dd@meta.data$nGene),digits = 2)
-  p5 <- ggplot(data=dd@meta.data, aes(x=nUMI, y=nGene))+geom_point() + 
+  gene.cor <- round(x = cor(x = dd@meta.data$nCount_RNA, y = dd@meta.data$nFeature_RNA),digits = 2)
+  p5 <- ggplot(data=dd@meta.data, aes(x=nCount_RNA, y=nFeature_RNA))+geom_point() + 
     geom_hline(yintercept = c(input$parm_filter_gene_min,input$parm_filter_gene_max),colour = "blue",size = 1) +
     labs(title=paste0('   R = ',gene.cor)) + theme_classic() 
   
