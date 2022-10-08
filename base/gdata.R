@@ -115,7 +115,7 @@ SeuratData <- reactive({
                  dd <- CreateSeuratObject(DataQC()@assays$RNA@counts,meta.data =DataQC()@meta.data,
                                           min.cells = input$parm_filter_cell_min)
                  dd <- FilterCells(object = dd, 
-                                   subset.names = c("nGene", "percent.mito"), 
+                                   subset.names = c("nCount_RNA", "percent.mito"), 
                                    low.thresholds  = c(input$parm_filter_gene_min, -Inf), 
                                    high.thresholds = c(input$parm_filter_gene_max, input$parm_filter_mt/100))
 
