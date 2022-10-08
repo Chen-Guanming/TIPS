@@ -173,14 +173,129 @@ scData <- reactive({
                  isolate({
                  
                  if(input$parm_traj_NegBinom){
-                   fdata           <-  data.frame( gene_short_name = rownames(subSeuratDat()@assays$RNA@counts))
-                   rownames(fdata) <- rownames(subSeuratDat()@assays$RNA@counts)
-                   fd <- new('AnnotatedDataFrame', data = fdata) 
-                   pd <- new('AnnotatedDataFrame', data = subSeuratDat()@meta.data) 
-                   sc.data  <- newCellDataSet(as.sparse(subSeuratDat()@assays$RNA@counts), phenoData = pd, featureData = fd, 
-                                              lowerDetectionLimit = 0.1)
-                   
-                   
+                   #fdata           <-  data.frame( gene_short_name = rownames(subSeuratDat()@assays$RNA@counts))
+                   #rownames(fdata) <- rownames(subSeuratDat()@assays$RNA@counts)
+                   #fd <- new('AnnotatedDataFrame', data = fdata) 
+                   #pd <- new('AnnotatedDataFrame', data = subSeuratDat()@meta.data) 
+                     
+                   #sc.data  <- newCellDataSet(subSeuratDat()@assays$RNA@counts, phenoData = pd, featureData = fd,lowerDetectionLimit = 0.1)
+                   newimport <- function(otherCDS, import_all = FALSE) {
+                                                                      if(class(otherCDS)[1] == 'Seurat') {
+                                                                        requireNamespace("Seurat")
+                                                                        data <- otherCDS@assays$RNA@counts
+
+                                                                        if(class(data) == "data.frame") {
+                                                                          data <- as(as.matrix(data), "sparseMatrix")
+                                                                        }
+
+                                                                        pd <- tryCatch( {
+                                                                          pd <- new("AnnotatedDataFrame", data = otherCDS@meta.data)
+                                                                          pd
+                                                                        },
+                                                                        #warning = function(w) { },
+                                                                        error = function(e) {
+                                                                          pData <- data.frame(cell_id = colnames(data), row.names = colnames(data))
+                                                                          pd <- new("AnnotatedDataFrame", data = pData)
+
+                                                                          message("This Seurat object doesn't provide any meta data");
+                                                                          pd
+                                                                        })
+
+                                                                        # remove filtered cells from Seurat
+                                                                        if(length(setdiff(colnames(data), rownames(pd))) > 0) {
+                                                                          data <- data[, rownames(pd)]
+                                                                        }
+
+                                                                        fData <- data.frame(gene_short_name = row.names(data), row.names = row.names(data))
+                                                                        fd <- new("AnnotatedDataFrame", data = fData)
+                                                                        lowerDetectionLimit <- 0
+
+                                                                        if(all(data == floor(data))) {
+                                                                          expressionFamily <- negbinomial.size()
+                                                                        } else if(any(data < 0)){
+                                                                          expressionFamily <- uninormal()
+                                                                        } else {
+                                                                          expressionFamily <- tobit()
+                                                                        }
+
+                                                                        valid_data <- data[, row.names(pd)]
+
+                                                                        monocle_cds <- newCellDataSet(data,
+                                                                                                      phenoData = pd,
+                                                                                                      featureData = fd,
+                                                                                                      lowerDetectionLimit=lowerDetectionLimit,
+                                                                                                      expressionFamily=expressionFamily)
+
+                                                                        if(import_all) {
+                                                                          if("Monocle" %in% names(otherCDS@misc)) {
+                                                                            otherCDS@misc$Monocle@auxClusteringData$seurat <- NULL
+                                                                            otherCDS@misc$Monocle@auxClusteringData$scran <- NULL
+
+                                                                            monocle_cds <- otherCDS@misc$Monocle
+                                                                            mist_list <- otherCDS
+
+                                                                          } else {
+                                                                            # mist_list <- list(ident = ident)
+                                                                            mist_list <- otherCDS
+                                                                          }
+                                                                        } else {
+                                                                          mist_list <- list()
+                                                                        }
+
+                                                                        if(1==1) {
+                                                                          var.genes <- setOrderingFilter(monocle_cds, otherCDS@assays$RNA@var.features)
+
+                                                                        }
+                                                                        monocle_cds@auxClusteringData$seurat <- mist_list
+
+                                                                      } else if (class(otherCDS)[1] == 'SCESet') {
+                                                                        requireNamespace("scater")
+
+                                                                        message('Converting the exprs data in log scale back to original scale ...')
+                                                                        data <- 2^otherCDS@assayData$exprs - otherCDS@logExprsOffset
+
+                                                                        fd <- otherCDS@featureData
+                                                                        pd <- otherCDS@phenoData
+                                                                        experimentData = otherCDS@experimentData
+                                                                        if("is.expr" %in% slotNames(otherCDS))
+                                                                          lowerDetectionLimit <- otherCDS@is.expr
+                                                                        else
+                                                                          lowerDetectionLimit <- 1
+
+                                                                        if(all(data == floor(data))) {
+                                                                          expressionFamily <- negbinomial.size()
+                                                                        } else if(any(data < 0)){
+                                                                          expressionFamily <- uninormal()
+                                                                        } else {
+                                                                          expressionFamily <- tobit()
+                                                                        }
+
+                                                                        if(import_all) {
+                                                                          # mist_list <- list(iotherCDS@sc3,
+                                                                          #                   otherCDS@reducedDimension)
+                                                                          mist_list <- otherCDS
+
+                                                                        } else {
+                                                                          mist_list <- list()
+                                                                        }
+
+                                                                        monocle_cds <- newCellDataSet(data,
+                                                                                                      phenoData = pd,
+                                                                                                      featureData = fd,
+                                                                                                      lowerDetectionLimit=lowerDetectionLimit,
+                                                                                                      expressionFamily=expressionFamily)
+                                                                        # monocle_cds@auxClusteringData$sc3 <- otherCDS@sc3
+                                                                        # monocle_cds@auxOrderingData$scran <- mist_list
+
+                                                                        monocle_cds@auxOrderingData$scran <- mist_list
+
+                                                                      } else {
+                                                                        stop('the object type you want to export to is not supported yet')
+                                                                      }
+
+                                                                      return(monocle_cds)
+                                                                    }
+                   sc.data <- newimport(subSeuratDat())
                    sc.data <- estimateSizeFactors(sc.data)
                    sc.data <- estimateDispersions(sc.data)
                  }else{  
