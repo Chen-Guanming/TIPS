@@ -90,9 +90,7 @@ DataQC <- reactive({
                detail = 'This may take a while...', value = 0, 
                expr = {
                    dd           <- CreateSeuratObject(gdata_expr(),meta.data =gdata_phenotype())
-                   mito.genes   <- grep(pattern = "^[mM][tT]-", x = rownames(x = dd@assays$RNA@counts), value = TRUE)
-                   percent.mito <- Matrix::colSums(dd@assays$RNA@counts[mito.genes, ])/Matrix::colSums(dd@assays$RNA@counts)
-                   dd           <- AddMetaData(object = dd, metadata = percent.mito, col.name = "percent.mito")
+                   dd           <- object.raw[["percent.mito"]] <- PercentageFeatureSet(object = dd,pattern = "^[mM][tT]-")
                })
   dd
 })
