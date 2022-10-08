@@ -223,8 +223,8 @@ output$ui_dimreduce <- renderUI({
 
                                          actionButton("btn_dimreduce", "Compute")
                                  ),
-                       wellPanel(       sliderInput("parm_dimreduce_figw", "Figure width:", min = 100, max = 1500, value = 600),
-                                        sliderInput("parm_dimreduce_figh", "Figure  Hight:", min = 100, max = 1000, value = 400),
+                       wellPanel(       sliderInput("parm_dimreduce_figw", "Figure width:", min = 10, max = 15000, value = 600),
+                                        sliderInput("parm_dimreduce_figh", "Figure  Hight:", min = 10, max = 10000, value = 400),
                                         uiOutput('ui_parm_dimreduce_bycolor'),
                                         numericInput("parm_dimreduce_ptsize", "Point Size:", 1, min = 1,step = 1)
                                  )
@@ -311,8 +311,8 @@ output$ui_trajectory <- renderUI({
                                      checkboxInput("parm_traj_reverse", "Reverse the beginning and end points of the learned biological process", FALSE),
                                      actionButton("btn_trajectory", "Compute")
     ),
-                    wellPanel(       sliderInput("parm_traj_figw", "Figure width:", min = 100, max = 1500, value = 600),
-                                     sliderInput("parm_traj_figh", "Figure  Hight:", min = 100, max = 1000, value = 400),
+                    wellPanel(       sliderInput("parm_traj_figw", "Figure width:", min = 10, max = 15000, value = 600),
+                                     sliderInput("parm_traj_figh", "Figure  Hight:", min = 10, max = 10000, value = 400),
                                      numericInput("parm_traj_ptsize", "Point Size:", 1, min = 1,step = 1),
                                      uiOutput('ui_parm_traj_pd')
                               )),
@@ -433,8 +433,8 @@ output$ui_geneset <- renderUI({
           condition = "input.parm_GeneSets_seltype == 'usr'",
           uiOutput("ui_geneset_param")), 
           numericInput("parm_GeneSets_nbin", "Number of bins for compute distribution correlation:", 10, min = 1,step = 1),
-          sliderInput("parm_GeneSets_figw", "Figure width:", min = 100, max = 1500, value = 800),
-          sliderInput("parm_GeneSets_figh", "Figure  Hight:", min = 100, max = 1000, value = 600)
+          sliderInput("parm_GeneSets_figw", "Figure width:", min = 10, max = 15000, value = 800),
+          sliderInput("parm_GeneSets_figh", "Figure  Hight:", min = 10, max = 10000, value = 600)
       )),
     column(width = 9,  box(    plotOutput("HeatmapPlot",width = "100%", height = "100%"),
                                width = NULL,  collapsible = F,title = " ", status = "primary", solidHeader = TRUE),
@@ -526,8 +526,8 @@ output$ui_gene_cor <- renderUI({
     column(width = 3, wellPanel(div('Analysis the correlation between Pseudotime and Gene expression')),
                       wellPanel(    numericInput("parm_GeneCor_genenum", "Gene number cutoff:", 50, min = 5,max=n, step = 1)
                                 ),
-                      wellPanel(       sliderInput("parm_GeneCorHeatmap_figw", "Figure width:", min = 100, max = 1500, value = 600),
-                                       sliderInput("parm_GeneCorHeatmap_figh", "Figure  Hight:", min = 100, max = 1000, value = 400)
+                      wellPanel(       sliderInput("parm_GeneCorHeatmap_figw", "Figure width:", min = 10, max = 15000, value = 600),
+                                       sliderInput("parm_GeneCorHeatmap_figh", "Figure  Hight:", min = 10, max = 10000, value = 400)
            )),
     column(width = 9,  box(plotOutput("GeneCorHeatmap",width = "100%", height = "100%"),
                                width = NULL,  collapsible = F,title = " ", status = "primary", solidHeader = TRUE),
@@ -536,8 +536,8 @@ output$ui_gene_cor <- renderUI({
   fluidRow( 
     column(width = 3,  wellPanel( selectizeInput(inputId = "parm_GeneCorPlot_gene", label = "Select gene:", 
                                                     choices = genenames, selected = genenames[1], multiple = F)),
-                      wellPanel(  sliderInput("parm_GeneCorPlot_figw", "Figure width:", min = 100, max = 1500, value = 600),
-                                  sliderInput("parm_GeneCorPlot_figh", "Figure  Hight:", min = 100, max = 1000, value = 400))
+                      wellPanel(  sliderInput("parm_GeneCorPlot_figw", "Figure width:", min = 10, max = 15000, value = 600),
+                                  sliderInput("parm_GeneCorPlot_figh", "Figure  Hight:", min = 10, max = 10000, value = 400))
     ),
     column(width = 9,  box(plotOutput("GeneCorPlot",width = "100%", height = "100%"),                          
                            width = NULL,  collapsible = F,title = " ", status = "primary", solidHeader = TRUE),
@@ -647,8 +647,8 @@ output$ui_som <- renderUI({
                                                 c('[NONE]',colnames(pData(scData()))),selected ="[NONE]", multiple=F)
 #                                    ,actionButton("btn_som", "Compute")
                                     ),
-                      wellPanel(  sliderInput("parm_som_figw", "Figure width:", min = 100, max = 1500, value = 600),
-                                  sliderInput("parm_som_figh", "Figure  Hight:", min = 100, max = 1000, value = 400)) 
+                      wellPanel(  sliderInput("parm_som_figw", "Figure width:", min = 10, max = 15000, value = 600),
+                                  sliderInput("parm_som_figh", "Figure  Hight:", min = 10, max = 10000, value = 400)) 
            ),
     column(width = 9,  box(plotOutput("somPlot",width = "100%", height = "100%"), 
                            width = NULL,  collapsible = F,title = " ", status = "primary", solidHeader = TRUE),
@@ -714,8 +714,8 @@ output$ui_switchHist <- renderUI({
                                 numericInput("parm_switchHist_qcutoff", "q value cutoff:", 0.05),
                                 numericInput("parm_switchHist_kcutoff", "k cutoff:", 0.5,min = 0),
                                 numericInput("parm_switchHist_ucutoff", "u cutoff:", 0,min = 0)), 
-                      wellPanel(  sliderInput("parm_switchHist_figw", "Figure width:", min = 100, max = 1500, value = 600),
-                       sliderInput("parm_switchHist_figh", "Figure  Hight:", min = 100, max = 1000, value = 400)) 
+                      wellPanel(  sliderInput("parm_switchHist_figw", "Figure width:", min = 10, max = 15000, value = 600),
+                       sliderInput("parm_switchHist_figh", "Figure  Hight:", min = 10, max = 10000, value = 400)) 
     ),
     column(width = 9,  box(plotOutput("switchPlotHist",width = "100%", height = "100%"), 
                            width = NULL,  collapsible = F,title = " ", status = "primary", solidHeader = TRUE),
@@ -791,8 +791,8 @@ output$ui_switchScater <- renderUI({
   
   div(fluidRow( 
     column(width = 3,  wellPanel(  numericInput("parm_switchScater_ncutoff", "gene number cutoff:", 20)), 
-                       wellPanel(  sliderInput("parm_switchScater_figw", "Figure width:", min = 100, max = 1500, value = 600),
-                                   sliderInput("parm_switchScater_figh", "Figure  Hight:", min = 100, max = 1000, value = 400)) 
+                       wellPanel(  sliderInput("parm_switchScater_figw", "Figure width:", min = 10, max = 15000, value = 600),
+                                   sliderInput("parm_switchScater_figh", "Figure  Hight:", min = 10, max = 10000, value = 400)) 
     ),
     column(width = 9,  box(plotOutput("switchPlotScater",width = "100%", height = "100%"), 
                            width = NULL,  collapsible = F,title = " ", status = "primary", solidHeader = TRUE),
@@ -949,8 +949,8 @@ output$ui_switchLine <- renderUI({
            
                        wellPanel(  sliderInput("parm_switchLine_pz", "Point size:", min = 1, max = 10, value = 1),
                                    sliderInput("parm_switchLine_linew", "Line width:", min = 0.1, max = 2, value = 0.5),
-                                   sliderInput("parm_switchLine_figw", "Figure width:", min = 100, max = 1500, value = 800),
-                                   sliderInput("parm_switchLine_figh", "Figure  Hight:", min = 100, max = 1000, value = 600)) 
+                                   sliderInput("parm_switchLine_figw", "Figure width:", min = 10, max = 15000, value = 800),
+                                   sliderInput("parm_switchLine_figh", "Figure  Hight:", min = 10, max = 10000, value = 600)) 
     ),
     column(width = 9,  box(plotOutput("switchPlotLine",width = "100%", height = "100%"), 
                            width = NULL,  collapsible = F,title = " ", status = "primary", solidHeader = TRUE),
