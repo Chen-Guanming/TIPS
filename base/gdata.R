@@ -177,8 +177,7 @@ scData <- reactive({
                    rownames(fdata) <- rownames(subSeuratDat()@assays$RNA@counts)
                    fd <- new('AnnotatedDataFrame', data = fdata) 
                    pd <- new('AnnotatedDataFrame', data = subSeuratDat()@meta.data) 
-                   sc.data <- newimport(subSeuratDat())
-                   #sc.data  <- newCellDataSet(as(as.matrix(subSeuratDat()@assays$RNA@counts), 'sparseMatrix'), phenoData = pd, featureData = fd)
+                   sc.data  <- newCellDataSet(subSeuratDat()@assays$RNA@counts, phenoData = pd, featureData = fd,lowerDetectionLimit = 0.1)
                    sc.data <- estimateSizeFactors(sc.data)
                    sc.data <- estimateDispersions(sc.data)
                  }else{  
