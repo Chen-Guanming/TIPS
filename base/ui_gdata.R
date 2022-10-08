@@ -302,8 +302,8 @@ output$ui_trajectory <- renderUI({
                                      conditionalPanel(
                                                condition = "input.parm_traj_filter == 'Y'",
                                                selectInput("parm_traj_cluster", "Select clusters:", 
-                                                           choices  = levels(SeuratData()@ident),
-                                                           selected = levels(SeuratData()@ident),
+                                                           choices  = levels(SeuratData()@active.ident),
+                                                           selected = levels(SeuratData()@active.ident),
                                                            multiple = T )), 
       
                                      checkboxInput("parm_traj_norm", "Normalize the data", TRUE),
