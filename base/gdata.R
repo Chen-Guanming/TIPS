@@ -128,20 +128,7 @@ SeuratData <- reactive({
                    xhigh   <- input$parm_dimreduce_xhigh
                  }
                  ycutoff <- input$parm_dimreduce_ycutoff
-                 
-                 Feature_sacle_PCA_all <- function(object, nfeatures){
-                                                object <- NormalizeData(object)
-                                                object <- FindVariableFeatures(object = object,nfeatures=nfeatures)
-                                                object <- ScaleData(object = object,features = rownames(object))
-                                                object <- RunPCA(object=object,features=VariableFeatures(object))
-                                                return(object)
-                                                }
-                 Neighbor_cluster_umap_tsne <- function(object,dims,resolution,reduction){
-                                              object <- RunUMAP(object = object,dims=dims,reduction=reduction)
-                                              object <- FindNeighbors(object = object,dims=dims,reduction=reduction)
-                                              object <- FindClusters(object = object,resolution = resolution)
-                                              return(object)
-                                              }
+               
 
                  dd <- FindVariableFeatures(object = dd,nfeatures=3000)
                  dd <- ScaleData(object = dd,features = rownames(dd))
