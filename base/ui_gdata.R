@@ -123,7 +123,7 @@ output$QCPlotVln <- renderPlot({
     geom_jitter(shape=16, position=position_jitter(0.2))+ 
     theme_classic() + labs(x='',y='Number of UMIs per cell')
   
-  df  <- data.frame(nFeature_RNA = ' ',Count = dd@meta.data$percent.mito * 100)
+  df  <- data.frame(nFeature_RNA = ' ',Count = dd@meta.data$percent.mito)
   p3 <- ggplot(df, aes(x=nFeature_RNA,y=Count)) + geom_violin() + 
     geom_hline(yintercept = c(input$parm_filter_mt),colour = "blue",size = 1) +
     geom_jitter(shape=16, position=position_jitter(0.2))+ 
