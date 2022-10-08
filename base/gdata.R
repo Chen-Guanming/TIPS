@@ -90,7 +90,7 @@ DataQC <- reactive({
                detail = 'This may take a while...', value = 0, 
                expr = {
                    dd           <- CreateSeuratObject(gdata_expr(),meta.data =gdata_phenotype())
-                   dd           <- dd[["percent.mito"]] <- PercentageFeatureSet(object = dd,pattern = "^[mM][tT]-")
+                   dd[["percent.mito"]] <- PercentageFeatureSet(object = dd,pattern = "^[mM][tT]-")
                })
   dd
 })
