@@ -177,7 +177,7 @@ scData <- reactive({
                    rownames(fdata) <- rownames(subSeuratDat()@assays$RNA@counts)
                    fd <- new('AnnotatedDataFrame', data = fdata) 
                    pd <- new('AnnotatedDataFrame', data = subSeuratDat()@meta.data) 
-                   sc.data  <- newCellDataSet(subSeuratDat()@assays$RNA@counts, phenoData = pd, featureData = fd, 
+                   sc.data  <- newCellDataSet(as.sparse(subSeuratDat()@assays$RNA@counts), phenoData = pd, featureData = fd, 
                                               lowerDetectionLimit = 0.1)
                    
                    
