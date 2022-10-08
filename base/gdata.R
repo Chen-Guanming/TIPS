@@ -113,7 +113,7 @@ SeuratData <- reactive({
                  dd <- CreateSeuratObject(DataQC()@assays$RNA@counts,meta.data =DataQC()@meta.data,
                                           min.cells = input$parm_filter_cell_min)
                  dd <- subset(dd, nFeature_RNA > input$parm_filter_gene_min | nFeature_RNA < input$parm_filter_gene_max)
-                 dd <- subset(dd, percent.mito < input$parm_filter_mt/100)   
+                 dd <- subset(dd, percent.mito < input$parm_filter_mt)   
 
                  if (getInputValue(input$parm_dimreduce_norm,TRUE)){
                    dd <- NormalizeData(object = dd)
