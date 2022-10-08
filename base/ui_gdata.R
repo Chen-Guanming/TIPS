@@ -110,7 +110,7 @@ output$QCPlotVln <- renderPlot({
     return(NULL)
   } 
   dd <- DataQC()
-  p1 <- VlnPlot(object = dd, features.plot = c("nFeature_RNA", "nCount_RNA", "percent.mito"), nCol = 3)
+  p1 <- VlnPlot(object = dd, features = c("nFeature_RNA", "nCount_RNA", "percent.mito"), ncol = 3)
   
   df  <- data.frame(nFeature_RNA = ' ',Count = dd@meta.data$nFeature_RNA)
   p1 <- ggplot(df, aes(x=nFeature_RNA,y=Count)) + geom_violin() + 
