@@ -38,11 +38,7 @@ gdata_expr <- reactive({
                      idx2 <- (apply(dd,1,sd) > 0)
                    }            
                    dd <- dd[idx1&idx2, ]
-                   
-                   ###  log data
-                   if(input$param_file_exprDatalog){
-                     dd <- log2(dd+1)
-                   }
+                                  
                  }
                  
                })
@@ -94,8 +90,8 @@ DataQC <- reactive({
                detail = 'This may take a while...', value = 0, 
                expr = {
                    dd           <- CreateSeuratObject(gdata_expr(),meta.data =gdata_phenotype())
-                   mito.genes   <- grep(pattern = "^[mM][tT]-", x = rownames(x = dd@data), value = TRUE)
-                   percent.mito <- Matrix::colSums(dd@raw.data[mito.genes, ])/Matrix::colSums(dd@raw.data)
+                   mito.genes   <- grep(pattern = "^[mM][tT]-", x = rownames(x = dd@assays$RNA@counts), value = TRUE)
+                   percent.mito <- Matrix::colSums(dd@assays$RNA@counts[mito.genes, ])/Matrix::colSums(dd@assays$RNA@counts)
                    dd           <- AddMetaData(object = dd, metadata = percent.mito, col.name = "percent.mito")
                })
   dd
@@ -116,7 +112,7 @@ SeuratData <- reactive({
                expr = {
                  isolate({
                  
-                 dd <- CreateSeuratObject(DataQC()@raw.data,meta.data =DataQC()@meta.data,
+                 dd <- CreateSeuratObject(DataQC()@assays$RNA@counts,meta.data =DataQC()@meta.data,
                                           min.cells = input$parm_filter_cell_min)
                  dd <- FilterCells(object = dd, 
                                    subset.names = c("nGene", "percent.mito"), 
@@ -162,7 +158,7 @@ subSeuratDat <- reactive({
     
   }else{
     
-    dd <- SubsetData(SeuratData(),ident.use = levels(SeuratData()@ident),subset.raw = T)
+    dd <- SubsetData(SeuratData(),ident.use = levels(SeuratData()@active.ident),subset.raw = T)
   }
   dd
 })
@@ -180,11 +176,11 @@ scData <- reactive({
                  isolate({
                  
                  if(input$parm_traj_NegBinom){
-                   fdata           <-  data.frame( gene_short_name = rownames(subSeuratDat()@raw.data))
-                   rownames(fdata) <- rownames(subSeuratDat()@raw.data)
+                   fdata           <-  data.frame( gene_short_name = rownames(subSeuratDat()@assays$RNA@counts))
+                   rownames(fdata) <- rownames(subSeuratDat()@assays$RNA@counts)
                    fd <- new('AnnotatedDataFrame', data = fdata) 
                    pd <- new('AnnotatedDataFrame', data = subSeuratDat()@meta.data) 
-                   sc.data  <- newCellDataSet(subSeuratDat()@raw.data, phenoData = pd, featureData = fd, 
+                   sc.data  <- newCellDataSet(subSeuratDat()@assays$RNA@counts, phenoData = pd, featureData = fd, 
                                               lowerDetectionLimit = 0.1)
                    
                    
@@ -508,7 +504,7 @@ data.switch.org <-  reactive({
   withProgress(message = 'Calculation in progress',
                detail = 'This may take a while...', value = 0, 
                expr = {
-                 mx     <- subSeuratDat()@raw.data
+                 mx     <- subSeuratDat()@assays$RNA@counts
                  
                  #### filter genes by ratio of nonzero expression
                  nn <- apply(mx,1,function(v){ sum(v>0)})  ## number of nonzero expression
