@@ -128,17 +128,31 @@ SeuratData <- reactive({
                    xhigh   <- input$parm_dimreduce_xhigh
                  }
                  ycutoff <- input$parm_dimreduce_ycutoff
+                 
+                 Feature_sacle_PCA_all <- function(object, nfeatures){
+                                                object <- NormalizeData(object)
+                                                object <- FindVariableFeatures(object = object,nfeatures=nfeatures)
+                                                object <- ScaleData(object = object,features = rownames(object))
+                                                object <- RunPCA(object=object,features=VariableFeatures(object))
+                                                return(object)
+                                                }
+                 Neighbor_cluster_umap_tsne <- function(object,dims,resolution,reduction){
+                                              object <- RunUMAP(object = object,dims=dims,reduction=reduction)
+                                              object <- FindNeighbors(object = object,dims=dims,reduction=reduction)
+                                              object <- FindClusters(object = object,resolution = resolution)
+                                              return(object)
+                                              }
 
-                 dd <- FindVariableGenes(object = dd, x.low.cutoff = xlow, x.high.cutoff = xhigh , y.cutoff = ycutoff)
-                 dd <- ScaleData(object = dd)
-                 dd <- RunPCA(object = dd)
-                 dd <- RunTSNE(object = dd, genes.use = dd@var.genes, perplexity = input$parm_dimreduce_tSNE_ppl)
-                 dd <- RunUMAP(object = dd, genes.use = dd@var.genes, reduction.use = "umap", n_neighbors = input$parm_dimreduce_umap_kNeighbors)
-                 dd <- FindClusters(object = dd, reduction.type = "umap", dims.use = 1:2, print.output = F)
-                 dd <- FindClusters(object = dd, reduction.type = "umap", dims.use = 1:2, print.output = F, resolution = 1)
-                 dd <- FindClusters(object = dd, reduction.type = "umap", dims.use = 1:2, print.output = F, resolution = 1.2)
-                 dd <- FindClusters(object = dd, reduction.type = "umap", dims.use = 1:2, print.output = F, resolution = 0.6)
-                 dd <- FindClusters(object = dd, reduction.type = "umap", dims.use = 1:2, print.output = F, resolution = 0.4)
+                 dd <- FindVariableFeatures(object = dd,nfeatures=3000)
+                 dd <- ScaleData(object = dd,features = rownames(dd))
+                 dd <- RunPCA(object = dd,features=VariableFeatures(object))
+                 dd <- RunTSNE(object = dd, dims=1:30)
+                 dd <- RunUMAP(object = dd, dims=1:30)
+                 dd <- FindNeighbors(object = dd,dims=1:30)
+                 dd <- FindClusters(object = dd, resolution = 1)
+                 dd <- FindClusters(object = dd, resolution = 1.2)
+                 dd <- FindClusters(object = dd, resolution = 0.6)
+                 dd <- FindClusters(object = dd, resolution = 0.4)
                  
                  })
                })
