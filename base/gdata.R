@@ -188,7 +188,7 @@ scData <- reactive({
                  }  
                    
                    sc.data <- detectGenes(sc.data, min_expr = 0.1)
-                   sc.data <- setOrderingFilter(sc.data, subSeuratDat()@var.genes)
+                   sc.data <- setOrderingFilter(sc.data, subSeuratDat()@assays$RNA@var.features)
                    if(input$parm_traj_norm){
                      sc.data <- reduceDimension(sc.data, reduction_method = "DDRTree")
                    }else{
