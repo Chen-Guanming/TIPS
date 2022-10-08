@@ -132,7 +132,7 @@ SeuratData <- reactive({
 
                  dd <- FindVariableFeatures(object = dd,nfeatures=3000)
                  dd <- ScaleData(object = dd,features = rownames(dd))
-                 dd <- RunPCA(object = dd,features=VariableFeatures(object))
+                 dd <- RunPCA(object = dd,features=VariableFeatures(dd))
                  dd <- RunTSNE(object = dd, dims=1:30)
                  dd <- RunUMAP(object = dd, dims=1:30)
                  dd <- FindNeighbors(object = dd,dims=1:30)
