@@ -151,11 +151,11 @@ subSeuratDat <- reactive({
   
   if(input$parm_traj_filter == 'Y'){
     
-    dd <- SubsetData(SeuratData(),ident.use = input$parm_traj_cluster,subset.raw = T)
+    dd <- SubsetData(SeuratData(),ident.use = input$parm_traj_cluster)
     
   }else{
     
-    dd <- SubsetData(SeuratData(),ident.use = levels(SeuratData()@active.ident),subset.raw = T)
+    dd <- SubsetData(SeuratData(),ident.use = levels(SeuratData()@active.ident))
   }
   dd
 })
