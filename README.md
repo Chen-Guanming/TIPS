@@ -26,7 +26,7 @@ BiocManager::install(c("monocle","switchde"))
     kohonen 3.0.10
     markdown 1.1
     monocle 2.14.0
-    Seurat 2.3.4
+    Seurat 3/4
     shiny 1.4.0.2
     shinydashboard 0.7.1
     switchde 1.12.0
